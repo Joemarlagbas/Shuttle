@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h3>Send Laptop GPS as Shuttle</h3>
+<script>
+const API_URL = "http://localhost/update_location.php"; // or your server URL
+const API_KEY = "MY_SECRET_KEY";
+const SHUTTLE_ID = 1; // match your shuttle
+
+function sendLocation() {
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(pos=>{
+            const data = new FormData();
+            data.append("api_key", API_KEY);
+            data.append("shuttle_id", SHUTTLE_ID);
+            data.append("lat", pos.coords.latitude);
+            data.append("lng", pos.coords.longitude);
+
+            fetch(API_URL, {method:"POST", body:data})
+                .then(r=>r.json()).then(res=>console.log(res));
+        });
+    } else alert("GPS not supported");
+}
+
+// send every 10 seconds
+setInterval(sendLocation, 10000);
+</script>
+</body>
+</html>
